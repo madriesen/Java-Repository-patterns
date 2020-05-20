@@ -3,6 +3,8 @@ package fact.it.restaurantapp.controller;
 
 import fact.it.restaurantapp.betaling.HappyHourBetaling;
 import fact.it.restaurantapp.betaling.NormaleBetaling;
+import fact.it.restaurantapp.decorator.Administrator;
+import fact.it.restaurantapp.decorator.PoetsPersoon;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -116,27 +118,27 @@ public class MainController {
             System.out.println("####################################################################");
         }
         if (request.getParameter("decoratortest") != null) {
-//            IngangTeller ingangTeller = IngangTeller.getInstance();
-//            // een nieuw zaalpersoneelslid toevoegen
-//            System.out.println("####################################################################");
-//            Zaalpersoneel manu = new Zaalpersoneel();
-//            manu.setNaam("Manu");
-//            ingangTeller.attachObserver(manu);
-//            ingangTeller.setAantal(7);
-//            // we gaan manu detachen en hem als poetspersoon attachen zodat hij nog altijd kan reageren op de klantenteller maar daarbij ook kan schoonmaken
-//            System.out.println("####################################################################");
-//            ingangTeller.detachObserver(manu);
-//            ingangTeller.setAantal(10);
-//            Poetspersoon poetsPersoon = new Poetspersoon();
-//            poetsPersoon.setPersoneel(manu);
-//            poetsPersoon.schoonMaken();
-//            // Manu moet nu ook nog de administratie erbij nemen als iemand binnenkomt
-//            System.out.println("####################################################################");
-//            Administrator administrator = new Administrator();
-//            administrator.setPersoneel(manu);
-//            ingangTeller.attachObserver(administrator);
-//            ingangTeller.setAantal(5);
-//            System.out.println("####################################################################");
+            IngangTeller ingangTeller = IngangTeller.getInstance();
+            // een nieuw zaalpersoneelslid toevoegen
+            System.out.println("####################################################################");
+            Zaalpersoneel manu = new Zaalpersoneel();
+            manu.setNaam("Manu");
+            ingangTeller.attachObserver(manu);
+            ingangTeller.setAantal(7);
+            // we gaan manu detachen en hem als poetspersoon attachen zodat hij nog altijd kan reageren op de klantenteller maar daarbij ook kan schoonmaken
+            System.out.println("####################################################################");
+            ingangTeller.detachObserver(manu);
+            ingangTeller.setAantal(10);
+            PoetsPersoon poetsPersoon = new PoetsPersoon();
+            poetsPersoon.setPersoneel(manu);
+            poetsPersoon.schoonMaken();
+            // Manu moet nu ook nog de administratie erbij nemen als iemand binnenkomt
+            System.out.println("####################################################################");
+            Administrator administrator = new Administrator();
+            administrator.setPersoneel(manu);
+            ingangTeller.attachObserver(administrator);
+            ingangTeller.setAantal(5);
+            System.out.println("####################################################################");
 
         }
         return "index";

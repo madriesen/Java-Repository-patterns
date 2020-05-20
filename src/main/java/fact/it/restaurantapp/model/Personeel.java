@@ -2,6 +2,8 @@ package fact.it.restaurantapp.model;
 
 import fact.it.restaurantapp.observer.Observer;
 
+import javax.persistence.ManyToOne;
+
 public abstract class Personeel implements Observer {
     protected String naam;
 

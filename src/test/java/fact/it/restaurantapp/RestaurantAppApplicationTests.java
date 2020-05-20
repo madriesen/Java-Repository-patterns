@@ -2,6 +2,7 @@ package fact.it.restaurantapp;
 
 import fact.it.restaurantapp.betaling.HappyHourBetaling;
 import fact.it.restaurantapp.betaling.NormaleBetaling;
+import fact.it.restaurantapp.decorator.Administrator;
 import fact.it.restaurantapp.model.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -191,141 +192,40 @@ class RestaurantAppApplicationTests {
         assertEquals(168.0,bestelling.getTotaal(),0.1);
     }
 
-//
-//    @Test
-//    public void g_testDecoratorPattern_Zaal_Admin_1(){
-//        IngangTeller ingangTeller = IngangTeller.getInstance();
-//        ingangTeller.getObservers().clear();
-//        // een nieuw zaalpersoneelslid toevoegen
-//        Zaalpersoneel manu = new Zaalpersoneel();
-//        manu.setNaam("ZaalManu");
-//        //we geven hem extra admin-verantwoordelijkheid
-//        Administrator administrator = new Administrator();
-//        administrator.setPersoneel(manu);
-//        ingangTeller.attachObserver(administrator);
-//
-//        PrintStream defaultSO = System.out;
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        String result;
-//        System.setOut(new PrintStream(baos));
-//        try {
-//            //5 klanten komen binnen
-//            ingangTeller.setAantal(7);
-//            BufferedReader br = new BufferedReader(new StringReader(baos.toString()));
-//            result = br.readLine();
-//            assertEquals("Ik ben ZaalManu en ga het nodige doen om voor 7 klanten een tafel klaar te maken.", result);
-//            result = br.readLine();
-//            assertEquals("Vervolgens registreer ik de 7 klanten in het klantenbestand.", result);
-//            br.close();
-//        } catch (Exception e) {
-//            System.setOut(defaultSO);
-//            System.out.println("Error while redirection System.out");
-//        }
-//        System.setOut(defaultSO);
-//
-//    }
-//
-//    @Test
-//    public void h_testDecoratorPattern_Keuken_Admin_2(){
-//        IngangTeller ingangTeller = IngangTeller.getInstance();
-//        ingangTeller.getObservers().clear();
-//        // een nieuw keukenpersoneelslid toevoegen
-//        Keukenpersoneel rob = new Keukenpersoneel();
-//        rob.setNaam("KeukenRob");
-//        //we geven hem extra admin-verantwoordelijkheid
-//        Administrator administrator = new Administrator();
-//        administrator.setPersoneel(rob);
-//        ingangTeller.attachObserver(administrator);
-//
-//        PrintStream defaultSO = System.out;
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        String result;
-//        System.setOut(new PrintStream(baos));
-//        try {
-//            //5 klanten komen binnen
-//            ingangTeller.setAantal(6);
-//            BufferedReader br = new BufferedReader(new StringReader(baos.toString()));
-//            result = br.readLine();
-//            assertEquals("Ik ben KeukenRob en ik begin onmiddellijk met het maken van 6 amuse-gueules!", result);
-//            result = br.readLine();
-//            assertEquals("Vervolgens registreer ik de 6 klanten in het klantenbestand.", result);
-//            br.close();
-//        } catch (Exception e) {
-//            System.setOut(defaultSO);
-//            System.out.println("Error while redirection System.out");
-//        }
-//        System.setOut(defaultSO);
-//
-//    }
-//
-//    @Test
-//    public void i_testDecoratorPattern_Zaal_Poets_3(){
-//        IngangTeller ingangTeller = IngangTeller.getInstance();
-//        ingangTeller.getObservers().clear();
-//        // een nieuw zaalpersoneelslid toevoegen
-//        Zaalpersoneel jozef = new Zaalpersoneel();
-//        jozef.setNaam("ZaalJozef");
-//        //we geven hem een extra taak
-//        Poetspersoon poetspersoon = new Poetspersoon();
-//        poetspersoon.setPersoneel(jozef);
-//        ingangTeller.attachObserver(poetspersoon);
-//
-//        PrintStream defaultSO = System.out;
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        String result;
-//        System.setOut(new PrintStream(baos));
-//        try {
-//            //7 klanten komen binnen
-//            ingangTeller.setAantal(7);
-//            poetspersoon.schoonMaken();
-//            BufferedReader br = new BufferedReader(new StringReader(baos.toString()));
-//            result = br.readLine();
-//            assertEquals("Ik ben ZaalJozef en ga het nodige doen om voor 7 klanten een tafel klaar te maken.", result);
-//            result = br.readLine();
-//            assertEquals("Ik ben ZaalJozef en ik ga nu ook schoonmaken", result);
-//            br.close();
-//        } catch (Exception e) {
-//            System.setOut(defaultSO);
-//            System.out.println("Error while redirection System.out");
-//        }
-//        System.setOut(defaultSO);
-//
-//    }
-//
-//    @Test
-//    public void j_testDecoratorPattern_Keuken_Poets_4(){
-//        IngangTeller ingangTeller = IngangTeller.getInstance();
-//        ingangTeller.getObservers().clear();
-//        // een nieuw zaalpersoneelslid toevoegen
-//        Keukenpersoneel bram = new Keukenpersoneel();
-//        bram.setNaam("KeukenBram");
-//        //we geven hem een extra taak
-//        Poetspersoon poetspersoon = new Poetspersoon();
-//        poetspersoon.setPersoneel(bram);
-//        ingangTeller.attachObserver(poetspersoon);
-//
-//        PrintStream defaultSO = System.out;
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        String result;
-//        System.setOut(new PrintStream(baos));
-//        try {
-//            //7 klanten komen binnen
-//            ingangTeller.setAantal(8);
-//            poetspersoon.schoonMaken();
-//            BufferedReader br = new BufferedReader(new StringReader(baos.toString()));
-//            result = br.readLine();
-//            assertEquals("Ik ben KeukenBram en ik begin onmiddellijk met het maken van 8 amuse-gueules!", result);
-//            result = br.readLine();
-//            assertEquals("Ik ben KeukenBram en ik ga nu ook schoonmaken", result);
-//            br.close();
-//        } catch (Exception e) {
-//            System.setOut(defaultSO);
-//            System.out.println("Error while redirection System.out");
-//        }
-//        System.setOut(defaultSO);
-//
-//    }
-//
+
+    @Test
+    public void g_testDecoratorPattern_Zaal_Admin_1(){
+        IngangTeller ingangTeller = IngangTeller.getInstance();
+        ingangTeller.getObservers().clear();
+        // een nieuw zaalpersoneelslid toevoegen
+        Zaalpersoneel manu = new Zaalpersoneel();
+        manu.setNaam("ZaalManu");
+        //we geven hem extra admin-verantwoordelijkheid
+        Administrator administrator = new Administrator();
+        administrator.setPersoneel(manu);
+        ingangTeller.attachObserver(administrator);
+
+        PrintStream defaultSO = System.out;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String result;
+        System.setOut(new PrintStream(baos));
+        try {
+            //5 klanten komen binnen
+            ingangTeller.setAantal(7);
+            BufferedReader br = new BufferedReader(new StringReader(baos.toString()));
+            result = br.readLine();
+            assertEquals("Ik ben ZaalManu en ga het nodige doen om voor 7 klanten een tafel klaar te maken.", result);
+            result = br.readLine();
+            assertEquals("Vervolgens registreer ik de 7 klanten in het klantenbestand.", result);
+            br.close();
+        } catch (Exception e) {
+            System.setOut(defaultSO);
+            System.out.println("Error while redirection System.out");
+        }
+        System.setOut(defaultSO);
+
+    }
+//\
 
 
 
