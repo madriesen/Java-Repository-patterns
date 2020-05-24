@@ -9,6 +9,10 @@ public class ExtraTaak extends Personeel {
     @ManyToOne
     private Personeel personeel;
 
+    public ExtraTaak() {
+        super();
+    }
+
     public Personeel getPersoneel() {
         return personeel;
     }

@@ -1,28 +1,68 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Title</title>
+<!doctype html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="master_template :: config">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test</title>
 </head>
-<body>
-<p>
-
-</p>
-<form action="/start">
-
-    <p>
-        <input type="submit" value="singletontest" name="singletontest"/>
-    </p>
-    <p>
-        <input type="submit" value="observertest" name="observertest"/>
-    </p>
-    <p>
-        <input type="submit" value="strategytest" name="strategytest"/>
-    </p>
-    <p>
-        <input type="submit" value="decoratortest" name="decoratortest"/>
-    </p>
-
-</form>
+<body class="h-screen flex flex-col">
+<main class="Site-content flex-1">
+    <div th:replace="master_template :: header"></div>
+    <div class="container mx-auto mt-4">
+        <div class="flex flex-row flex-1">
+            <div class="content col-span-2">
+                <form action="/" method="post" th:classappend="${added} ? hidden : none">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Vul
+                        database op
+                    </button>
+                </form>
+            </div>
+            <div id="toegevoegdeItems" th:if="${personeellijst!=null and !personeellijst.empty}">
+                <h1 class="text-3xl">Toegevoegde items</h1>
+                <div class="flex flex-row flex-auto">
+                    <div id="personeel">
+                        <h2 class="border-b pb-1 mb-2 border-black">Personeel</h2>
+                        <ul class="ml-5 list-disc">
+                            <li th:each="personeel : ${personeellijst}">
+                                <p th:text="${personeel.getNaam()}"></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="zaal">
+                        <h2 class="ml-5 border-b pb-1 mb-2 border-black">Tafels</h2>
+                        <ul class="ml-10 list-disc">
+                            <li th:each="tafel : ${tafellijst}">
+                                <p th:text="${tafel.getCode()}"></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="gerechten">
+                        <h2 class="ml-5 border-b pb-1 mb-2 border-black">Gerechten</h2>
+                        <ul class="ml-10 list-disc">
+                            <li th:each="gerecht : ${gerechtenlijst}">
+                                <p><span th:text="${gerecht.getNaam()}"></span> € <span
+                                        th:text="${gerecht.getActuelePrijs()}"></span></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="bestellingen">
+                        <h2 class="ml-5 border-b pb-1 mb-2 border-black">Bestellingen</h2>
+                        <ul class="ml-10 list-disc">
+                            <li th:each="bestelling : ${bestellingenlijst}">
+                                <p th:text="${bestelling.getFormattedDatum()}"></p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${personeellijstError!=null and !personeellijstError.empty and added}">
+                <p class="text-red-700" th:text="${personeellijstError}"></p>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="master_template :: master_footer"></div>
 </body>
 </html>

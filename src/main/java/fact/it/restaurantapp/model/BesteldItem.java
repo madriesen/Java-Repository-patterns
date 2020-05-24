@@ -1,8 +1,14 @@
 package fact.it.restaurantapp.model;
 
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+@Entity
 public class BesteldItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
     private int aantal;
     private double toegepastePrijs;
     @ManyToOne

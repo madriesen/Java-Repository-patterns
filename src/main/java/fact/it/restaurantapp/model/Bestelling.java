@@ -3,18 +3,21 @@ package fact.it.restaurantapp.model;
 import fact.it.restaurantapp.betaling.BetaalStrategie;
 import fact.it.restaurantapp.betaling.NormaleBetaling;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+@Entity
 public class Bestelling {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private GregorianCalendar datum;
     private boolean betaald;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     private Zaalpersoneel zaalpersoneel;
     @ManyToOne
     private Tafel tafel;
@@ -22,9 +25,29 @@ public class Bestelling {
     private List<BesteldItem> besteldItems = new ArrayList<>();
     @Transient
     private BetaalStrategie betaalStrategie;
-
     public Bestelling() {
         this.betaalStrategie = new NormaleBetaling();
+    }
+
+    private static double round(double value) {
+        if (2 < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, 2);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
+    public boolean isBetaald() {
+        return betaald;
+    }
+
+    public void setBetaald(boolean betaald) {
+        this.betaald = betaald;
+    }
+
+    public long getBestellingId() {
+        return id;
     }
 
     public GregorianCalendar getDatum() {
@@ -33,6 +56,11 @@ public class Bestelling {
 
     public void setDatum(GregorianCalendar datum) {
         this.datum = datum;
+    }
+
+    public String getFormattedDatum() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(this.getDatum().getTimeInMillis());
     }
 
     public void setBetaalStrategie(BetaalStrategie betaalStrategie) {
@@ -79,6 +107,6 @@ public class Bestelling {
             int aantal = item.getAantal();
             totaal += (prijs * aantal);
         }
-        return totaal;
+        return round(totaal);
     }
 }

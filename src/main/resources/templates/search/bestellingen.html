@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="master_template :: config">
+    <meta charset="UTF-8">
+    <title>Bestelling</title>
+</head>
+<body class="h-screen flex flex-col">
+<main class="Site-content flex-1">
+    <div th:replace="master_template :: header"></div>
+    <div class="container mx-auto mt-5">
+        <div class="">
+            <div class="grid grid-cols-4">
+                <h1 class="text-3xl col-span-3">Bestelling beheer</h1>
+                <div class="text-right">
+                    <a class="p-3 text-blue-400 hover:text-white hover:bg-blue-400 transition-colors duration-200"
+                       href="/bestellingen">Terug naar alle bestellingen</a>
+                </div>
+            </div>
+            <div id="beheer">
+                <form action="/bestellingen/zoeken" method="POST"
+                      class="grid grid-cols-3 py-2 border-b border-blue-900 font-bold">
+                    <div class="mx-3 flex flex-row">
+                        <input name="datum" type="date" class="bg-gray-100 border-gray-400 border mr-2 p-2">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                type="submit" name="action" value="datum">Zoek op datum
+                        </button>
+                    </div>
+                    <div class="mx-3  flex flex-row">
+                        <select name="tafel" id="tafels" class="bg-gray-100 border-gray-400 border mr-2 p-2 w-40">
+                            <option value="null">---Selecteer een tafel---</option>
+                            <option th:each="tafel : ${tafels}" th:value="${tafel.getTafelId()}"
+                                    th:text="${tafel.getCode()}"></option>
+                        </select>
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                type="submit" name="action" value="tafel">Zoek op tafel
+                        </button>
+                    </div>
+                    <div class="mx-3 flex flex-row">
+                        <input name="bedrag" type="number" class="bg-gray-100 border-gray-400 border mr-2 p-2">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                type="submit" name="action" value="bedrag">Zoek op bedrag
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="master_template :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="master_template :: config">
+    <meta charset="UTF-8">
+    <title>Bestelling</title>
+</head>
+<body class="h-screen flex flex-col">
+<main class="Site-content flex-1">
+    <div th:replace="master_template :: header"></div>
+    <div class="container mx-auto mt-5">
+        <div class="">
+            <div class="grid grid-cols-4">
+                <h1 class="text-3xl col-span-3">Bestelling beheer</h1>
+                <div class="text-right">
+                    <a class="p-3 text-blue-400 hover:text-white hover:bg-blue-400 transition-colors duration-200"
+                       href="/bestellingen/zoeken">Zoeken in bestellingen</a>
+                </div>
+            </div>
+            <div id="beheer">
+                <div class="grid grid-cols-5 py-4 border-b border-blue-900 font-bold">
+                    <div>Datum</div>
+                    <div>Tafelcode</div>
+                    <div>Zaalpersoneel</div>
+                    <div>Totaalprijs</div>
+                    <div>Betaald?</div>
+                </div>
+                <form th:each="bestelling : ${bestellinglijst}"
+                      th:action="@{/bestellingen/__${bestelling.getBestellingId()}__}"
+                      method="POST"
+                      class="grid grid-cols-5 py-4 border-b border-blue-900">
+                    <div th:text="${bestelling.getFormattedDatum()}">
+                    </div>
+                    <div th:text="${bestelling.getTafel().getCode()}">
+                    </div>
+                    <div th:text="${bestelling.getZaalpersoneel().getNaam()}">
+                    </div>
+                    <div th:text="'€ ' + ${bestelling.getTotaal()}">
+                    </div>
+                    <div th:switch="${bestelling.isBetaald()}">
+                        <div th:case="true" class="w-full h-full bg-green-400"></div>
+                        <div th:case="false" class="w-full h-full bg-red-500"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="mt-4" th:if="${zoekresultaten !=null}">
+            <a class="p-3 text-blue-400 hover:text-white hover:bg-blue-400 transition-colors duration-200"
+               href="/bestellingen/clear">Toon alle bestellingen</a>
+        </div>
+    </div>
+</main>
+<footer th:replace="master_template :: footer"></footer>
+</body>
+</html>

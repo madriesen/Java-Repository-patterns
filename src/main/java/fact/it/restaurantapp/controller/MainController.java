@@ -7,6 +7,8 @@ import fact.it.restaurantapp.decorator.Administrator;
 import fact.it.restaurantapp.decorator.PoetsPersoon;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import fact.it.restaurantapp.model.*;
 
@@ -17,7 +19,12 @@ import java.util.GregorianCalendar;
 @Controller
 public class MainController {
 
-    @RequestMapping("/start")
+    @GetMapping("/start")
+    public String index(Model model){
+        return "test_index";
+    }
+
+    @PostMapping("/start")
     public String starten(Model model, HttpServletRequest request) {
         String feedbacktekst = "";
 
@@ -141,6 +148,6 @@ public class MainController {
             System.out.println("####################################################################");
 
         }
-        return "index";
+        return "redirect:/start";
     }
 }
