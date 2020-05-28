@@ -22,12 +22,12 @@
                 </div>
                 <div>
                     <input type="text" name="naam" th:value="${personeel.getNaam()}"
-                           class="bg-gray-300 rounded border-2 border-gray-600 focus:border-gray-900 transition-color transition-duration-300 w-2/3 p-2">
+                           class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                 </div>
                 <div class="flex items-center justify-around">
                     <button type="submit" name="action" value="save"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-full">
-                        Save
+                        Opslaan
                     </button>
 <!--                    <button type="submit" name="action" value="delete"-->
 <!--                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-full">-->
@@ -37,24 +37,30 @@
             </form>
             <form action="/personeel/add" method="post"
                   class="w-9/12 grid grid-cols-3 py-4 border-b border-blue-900">
-                <div>
-                    <select name="dtype" id="dtype">
+                <div class="relative w-2/3">
+                    <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                            name="dtype" id="dtype">
                         <option value="zaal">Zaalpersoneel</option>
                         <option value="keuken">Keukenpersoneel</option>
                     </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                        </svg>
+                    </div>
                 </div>
                 <div>
                     <input type="text" name="naam"
-                           class="bg-gray-300 rounded border-2 border-gray-600 focus:border-gray-900 transition-color transition-duration-300 w-2/3 p-2">
+                           class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                 </div>
                 <div class="flex items-center justify-around">
                     <button type="submit" name="action" value="save"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-full">
-                        Save
+                        Toevoegen
                     </button>
                     <button type="submit" name="action" value="cancel"
                             class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-full">
-                        Cancel
+                        Annuleren
                     </button>
                 </div>
             </form>

@@ -1,8 +1,12 @@
 package fact.it.restaurantapp.controller;
 
-import fact.it.restaurantapp.model.Bestelling;
-import fact.it.restaurantapp.repository.BestellingRepository;
-import fact.it.restaurantapp.repository.TafelRepository;
+import fact.it.restaurantapp.betaling.BetaalStrategie;
+import fact.it.restaurantapp.betaling.HappyHourBetaling;
+import fact.it.restaurantapp.betaling.NormaleBetaling;
+import fact.it.restaurantapp.model.*;
+import fact.it.restaurantapp.repositories.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,23 +16,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
 public class BestellingController {
     private BestellingRepository bestellingRepository;
     private TafelRepository tafelRepository;
+    private PersoneelRepository personeelRepository;
+    private GerechtRepository gerechtRepository;
+    private BesteldItemRepository besteldItemRepository;
     private List<Bestelling> lijst = new ArrayList<>();
+    private boolean search = false;
 
-    public BestellingController(BestellingRepository bestellingRepository, TafelRepository tafelRepository) {
+    public BestellingController(BestellingRepository bestellingRepository, TafelRepository tafelRepository, PersoneelRepository personeelRepository, GerechtRepository gerechtRepository, BesteldItemRepository besteldItemRepository) {
         this.bestellingRepository = bestellingRepository;
         this.tafelRepository = tafelRepository;
+        this.personeelRepository = personeelRepository;
+        this.gerechtRepository = gerechtRepository;
+        this.besteldItemRepository = besteldItemRepository;
     }
 
     @GetMapping("/bestellingen")
     public String retrieve(Model model) {
-        if (lijst.isEmpty()) lijst = bestellingRepository.findAll();
+        if (!search) lijst = bestellingRepository.findAll();
         else model.addAttribute("zoekresultaten", true);
+
+        search = false;
 
         model.addAttribute("bestellinglijst", lijst);
         model.addAttribute("title", "Bestellingen");
@@ -41,16 +56,6 @@ public class BestellingController {
         return this.retrieve(model);
     }
 
-    @PostMapping("/bestellingen/{id}")
-    public String update(Model model, @PathVariable(name = "id") long personeelId, @RequestParam(name = "naam") String personeelNaam, @RequestParam(value = "action", required = true) String action) {
-        Bestelling bestelling = bestellingRepository.findById(personeelId).orElseThrow(() -> new EntityNotFoundException(personeelNaam));
-        if (action.equals("save"))
-            bestellingRepository.save(bestelling);
-        else if (action.equals("delete"))
-            bestellingRepository.delete(bestelling);
-        return "redirect:/bestellingen/";
-    }
-
     @GetMapping("/bestellingen/zoeken")
     public String showSearch(Model model) {
         model.addAttribute("title", "Zoeken in bestellingen");
@@ -60,16 +65,20 @@ public class BestellingController {
     }
 
     @PostMapping("/bestellingen/zoeken")
-    public String search(Model model, @RequestParam(name = "action") String action, @RequestParam(required = false, name = "datum") String datum, @RequestParam(required = false, name = "tafel") Long tafel, @RequestParam(required = false, name = "bedrag") Double bedrag) {
+    public String search(Model model, @RequestParam(name = "action") String action, @RequestParam(required = false, name = "datum") String datum, @RequestParam(required = false, name = "tafel") String tafel, @RequestParam(required = false, name = "bedrag") Double bedrag) {
         lijst.clear();
+        search = true;
         switch (action) {
             case "datum":
+                if (datum == null) return "redirect:/bestellingen";
                 this.zoekOpDatum(datum);
                 break;
             case "tafel":
-                this.zoekOpTafel(tafel);
+                if (tafel.equals("null")) return "redirect:/bestellingen";
+                this.zoekOpTafel(Long.parseLong(tafel));
                 break;
             case "bedrag":
+                if (bedrag == null) return "redirect:/bestellingen";
                 this.zoekOpBedrag(bedrag);
                 break;
         }
@@ -77,32 +86,100 @@ public class BestellingController {
         return this.retrieve(model);
     }
 
-    private void zoekOpBedrag(Double bedrag) {
-        List<Bestelling> alleBestellingen = bestellingRepository.findAll();
+    @GetMapping("/bestelling/{id}")
+    public String getBestelling(Model model, @PathVariable(name = "id") long id) {
+        Bestelling bestelling = bestellingRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Long.toString(id)));
 
-        for (Bestelling bestelling : alleBestellingen) {
+        model.addAttribute("bestelling", bestelling);
+        model.addAttribute("title", "bestelling details");
+        return "crud/bestelling_detail";
+    }
+
+    @GetMapping("/besetlling/nieuw")
+    public String showNieuweBestelling(Model model) {
+        model.addAttribute("personeelslijst", personeelRepository.findByDtype("Zaalpersoneel"));
+        model.addAttribute("tafellijst", tafelRepository.findAll());
+        model.addAttribute("gerechten", gerechtRepository.findAll());
+        return "crud/nieuweBestelling";
+    }
+
+    @PostMapping("/bestelling/nieuw")
+    public String processNieuweBestelling(Model model, @RequestParam(name = "zaalpersoneel") String zaalpersoneelId, @RequestParam(name = "tafel") String tafelId, @RequestParam(name = "alleGerechten") String alleGerechten, @RequestParam(name = "happyHour", defaultValue = "false") boolean happyhour) throws JSONException {
+        Bestelling nieuweBestelling = new Bestelling();
+        nieuweBestelling.setDatum(new GregorianCalendar());
+        nieuweBestelling.setBetaald(false);
+        setPersoneel(zaalpersoneelId, nieuweBestelling);
+        setTafel(tafelId, nieuweBestelling);
+        setBetaalstrategie(happyhour, nieuweBestelling);
+        besteldeItemsToevoegen(alleGerechten, nieuweBestelling);
+        bestellingOpslaan(nieuweBestelling);
+
+        return "redirect:/bestellingen";
+
+    }
+
+    @GetMapping("/bestelling/{id}/betalen")
+    public String betalen(Model model, @PathVariable(name = "id") long id){
+        Bestelling bestelling = bestellingRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Long.toString(id)));
+
+        bestelling.setBetaald(true);
+        bestellingRepository.save(bestelling);
+        return "redirect:/bestellingen";
+    }
+
+
+    private void setPersoneel(@RequestParam(name = "zaalpersoneel") String zaalpersoneelId, Bestelling nieuweBestelling) {
+        Zaalpersoneel zaal = (Zaalpersoneel) personeelRepository.findById(Long.parseLong(zaalpersoneelId)).orElseThrow(() -> new EntityNotFoundException(zaalpersoneelId));
+        nieuweBestelling.setZaalpersoneel(zaal);
+    }
+
+    private void setTafel(@RequestParam(name = "tafel") String tafelId, Bestelling nieuweBestelling) {
+        Tafel tafel = tafelRepository.findById(Long.parseLong(tafelId)).orElseThrow(() -> new EntityNotFoundException(tafelId));
+        nieuweBestelling.setTafel(tafel);
+    }
+
+    private void setBetaalstrategie(@RequestParam(name = "happyHour", defaultValue = "false") boolean happyhour, Bestelling nieuweBestelling) {
+        BetaalStrategie betaalStrategie = (happyhour) ? new HappyHourBetaling() : new NormaleBetaling();
+        nieuweBestelling.setBetaalStrategie(betaalStrategie);
+    }
+
+    private void besteldeItemsToevoegen(@RequestParam(name = "alleGerechten") String alleGerechten, Bestelling nieuweBestelling) throws JSONException {
+        JSONObject gerechtenAmounts = new JSONObject(alleGerechten);
+        Iterator<String> keys = gerechtenAmounts.keys();
+
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Gerecht gerecht = gerechtRepository.findById(Long.parseLong(key)).orElseThrow(() -> new EntityNotFoundException(key));
+            nieuweBestelling.addItem(gerecht, gerechtenAmounts.getInt(key));
+        }
+    }
+
+    private void bestellingOpslaan(Bestelling nieuweBestelling) {
+        bestellingRepository.save(nieuweBestelling);
+        for (BesteldItem item : nieuweBestelling.getBesteldItems())
+            besteldItemRepository.save(item);
+    }
+
+    private void zoekOpBedrag(Double bedrag) {
+
+        for (Bestelling bestelling : bestellingRepository.findAll()) {
             if (bestelling.getTotaal() >= bedrag)
                 lijst.add(bestelling);
         }
     }
 
-    private void zoekOpTafel(Long tafel) {
-        List<Bestelling> alleBestellingen = bestellingRepository.findAll();
-        for (Bestelling bestelling : alleBestellingen) {
-            if (bestelling.getTafel().getTafelId().equals(tafel))
-                lijst.add(bestelling);
-        }
+    private void zoekOpTafel(Long tafelId) {
+        Tafel tafel = tafelRepository.findById(tafelId).orElseThrow(() -> new EntityNotFoundException(Long.toString(tafelId)));
+        lijst = bestellingRepository.findByTafel(tafel);
     }
 
     private void zoekOpDatum(String datum) {
-        List<Bestelling> alleBestellingen = bestellingRepository.findAll();
 
-        for (Bestelling bestelling : alleBestellingen) {
+        for (Bestelling bestelling : bestellingRepository.findAll()) {
             if (bestelling.getFormattedDatum().equals(datum))
                 lijst.add(bestelling);
         }
     }
-
 }
 
 

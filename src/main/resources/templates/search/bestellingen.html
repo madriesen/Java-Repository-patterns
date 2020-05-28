@@ -9,8 +9,11 @@
     <div th:replace="master_template :: header"></div>
     <div class="container mx-auto mt-5">
         <div class="">
-            <div class="grid grid-cols-4">
-                <h1 class="text-3xl col-span-3">Bestelling beheer</h1>
+            <div class="flex">
+                <div class="flex-1">
+                    <h1 class="text-3xl">Bestelling beheer</h1>
+                </div>
+
                 <div class="text-right">
                     <a class="p-3 text-blue-400 hover:text-white hover:bg-blue-400 transition-colors duration-200"
                        href="/bestellingen">Terug naar alle bestellingen</a>
@@ -18,25 +21,40 @@
             </div>
             <div id="beheer">
                 <form action="/bestellingen/zoeken" method="POST"
-                      class="grid grid-cols-3 py-2 border-b border-blue-900 font-bold">
-                    <div class="mx-3 flex flex-row">
-                        <input name="datum" type="date" class="bg-gray-100 border-gray-400 border mr-2 p-2">
+                      class="flex py-2 border-b border-blue-900 font-bold">
+                    <div class="flex-1 flex flex-row items-center justify-around">
+                        <div>
+                            <input name="datum" type="date"
+                                   class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        </div>
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                 type="submit" name="action" value="datum">Zoek op datum
                         </button>
                     </div>
-                    <div class="mx-3  flex flex-row">
-                        <select name="tafel" id="tafels" class="bg-gray-100 border-gray-400 border mr-2 p-2 w-40">
-                            <option value="null">---Selecteer een tafel---</option>
-                            <option th:each="tafel : ${tafels}" th:value="${tafel.getTafelId()}"
-                                    th:text="${tafel.getCode()}"></option>
-                        </select>
+                    <div class="flex-1 flex flex-row items-center justify-around">
+                        <div class="relative">
+                            <select name="tafel" id="tafels"
+                                    class="block appearance-none w-full h-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                <option value="null">---Selecteer een tafel---</option>
+                                <option th:each="tafel : ${tafels}" th:value="${tafel.getTafelId()}"
+                                        th:text="${tafel.getCode()}"></option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20">
+                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                                </svg>
+                            </div>
+                        </div>
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                 type="submit" name="action" value="tafel">Zoek op tafel
                         </button>
                     </div>
-                    <div class="mx-3 flex flex-row">
-                        <input name="bedrag" type="number" class="bg-gray-100 border-gray-400 border mr-2 p-2">
+                    <div class="flex-1 flex flex-row items-center justify-around">
+                        <div>
+                            <input name="bedrag" type="number"
+                                   class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        </div>
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                 type="submit" name="action" value="bedrag">Zoek op bedrag
                         </button>

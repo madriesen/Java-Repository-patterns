@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="master_template :: config">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test</title>
+</head>
+<body class="h-screen flex flex-col">
+<main class="flex-1">
+    <div th:replace="master_template :: header"></div>
+    <div class="container mx-auto mt-4">
+        <div class="flex flex-row flex-1">
+            Er is iets mis gegaan. Probeer het opnieuw!
+        </div>
+    </div>
+</main>
+<div th:replace="master_template :: master_footer"></div>
+</body>
+</html>

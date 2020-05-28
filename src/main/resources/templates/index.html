@@ -8,18 +8,18 @@
     <title>Test</title>
 </head>
 <body class="h-screen flex flex-col">
-<main class="Site-content flex-1">
+<main class="flex-1">
     <div th:replace="master_template :: header"></div>
     <div class="container mx-auto mt-4">
         <div class="flex flex-row flex-1">
             <div class="content col-span-2">
                 <form action="/" method="post" th:classappend="${added} ? hidden : none">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Vul
+                    <button class="bg-blue-500 hover:bg-blue-700 focus:outline-none text-white font-bold py-2 px-4 rounded-full">Vul
                         database op
                     </button>
                 </form>
             </div>
-            <div id="toegevoegdeItems" th:if="${personeellijst!=null and !personeellijst.empty}">
+            <div id="toegevoegdeItems" th:if="${personeellijst!=null and !personeellijst.empty and first_time}">
                 <h1 class="text-3xl">Toegevoegde items</h1>
                 <div class="flex flex-row flex-auto">
                     <div id="personeel">

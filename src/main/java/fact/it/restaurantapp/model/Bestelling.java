@@ -2,6 +2,7 @@ package fact.it.restaurantapp.model;
 
 import fact.it.restaurantapp.betaling.BetaalStrategie;
 import fact.it.restaurantapp.betaling.NormaleBetaling;
+import fact.it.restaurantapp.helpers.DoubleHelper;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
@@ -29,14 +30,6 @@ public class Bestelling {
         this.betaalStrategie = new NormaleBetaling();
     }
 
-    private static double round(double value) {
-        if (2 < 0) throw new IllegalArgumentException();
-
-        long factor = (long) Math.pow(10, 2);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
-    }
 
     public boolean isBetaald() {
         return betaald;
@@ -107,6 +100,6 @@ public class Bestelling {
             int aantal = item.getAantal();
             totaal += (prijs * aantal);
         }
-        return round(totaal);
+        return DoubleHelper.round(totaal);
     }
 }

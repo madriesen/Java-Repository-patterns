@@ -1,5 +1,7 @@
 package fact.it.restaurantapp.model;
 
+import fact.it.restaurantapp.helpers.DoubleHelper;
+
 import javax.persistence.*;
 
 @Entity
@@ -28,7 +30,7 @@ public class BesteldItem {
     }
 
     public double getToegepastePrijs() {
-        return toegepastePrijs;
+        return DoubleHelper.round(toegepastePrijs);
     }
 
     public void setToegepastePrijs(double toegepastePrijs) {
@@ -49,5 +51,9 @@ public class BesteldItem {
 
     public void setGerecht(Gerecht gerecht) {
         this.gerecht = gerecht;
+    }
+
+    public double getTotaalPrijs(){
+        return DoubleHelper.round(this.toegepastePrijs * this.aantal);
     }
 }

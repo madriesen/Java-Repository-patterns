@@ -7,6 +7,10 @@ import javax.persistence.Id;
 
 @Entity
 public class Gerecht {
+    public long getGerechtId() {
+        return gerechtId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long gerechtId;

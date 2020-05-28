@@ -3,7 +3,7 @@ package fact.it.restaurantapp.controller;
 import fact.it.restaurantapp.model.Keukenpersoneel;
 import fact.it.restaurantapp.model.Personeel;
 import fact.it.restaurantapp.model.Zaalpersoneel;
-import fact.it.restaurantapp.repository.PersoneelRepository;
+import fact.it.restaurantapp.repositories.PersoneelRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,5 @@
-package fact.it.restaurantapp.repository;
+package fact.it.restaurantapp.repositories;
 
-import fact.it.restaurantapp.model.Personeel;
 import fact.it.restaurantapp.model.Tafel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
