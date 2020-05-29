@@ -7,6 +7,7 @@ import fact.it.restaurantapp.model.*;
 import fact.it.restaurantapp.repositories.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,21 +23,19 @@ import java.util.List;
 
 @Controller
 public class BestellingController {
+    @Autowired
     private BestellingRepository bestellingRepository;
+    @Autowired
     private TafelRepository tafelRepository;
+    @Autowired
     private PersoneelRepository personeelRepository;
+    @Autowired
     private GerechtRepository gerechtRepository;
+    @Autowired
     private BesteldItemRepository besteldItemRepository;
     private List<Bestelling> lijst = new ArrayList<>();
     private boolean search = false;
 
-    public BestellingController(BestellingRepository bestellingRepository, TafelRepository tafelRepository, PersoneelRepository personeelRepository, GerechtRepository gerechtRepository, BesteldItemRepository besteldItemRepository) {
-        this.bestellingRepository = bestellingRepository;
-        this.tafelRepository = tafelRepository;
-        this.personeelRepository = personeelRepository;
-        this.gerechtRepository = gerechtRepository;
-        this.besteldItemRepository = besteldItemRepository;
-    }
 
     @GetMapping("/bestellingen")
     public String retrieve(Model model) {

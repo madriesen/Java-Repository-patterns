@@ -4,6 +4,7 @@ import fact.it.restaurantapp.betaling.NormaleBetaling;
 import fact.it.restaurantapp.helpers.DoubleHelper;
 import fact.it.restaurantapp.model.*;
 import fact.it.restaurantapp.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,20 +17,18 @@ import java.util.Random;
 
 @Controller
 public class IndexController {
+    @Autowired
     private PersoneelRepository personeelRepository;
+    @Autowired
     private GerechtRepository gerechtRepository;
+    @Autowired
     private BestellingRepository bestellingRepository;
+    @Autowired
     private TafelRepository tafelRepository;
+    @Autowired
     private BesteldItemRepository besteldItemRepository;
     private int teller = 0;
 
-    public IndexController(PersoneelRepository personeelRepository, GerechtRepository gerechtRepository, BestellingRepository bestellingRepository, TafelRepository tafelRepository, BesteldItemRepository besteldItemRepository) {
-        this.personeelRepository = personeelRepository;
-        this.gerechtRepository = gerechtRepository;
-        this.bestellingRepository = bestellingRepository;
-        this.tafelRepository = tafelRepository;
-        this.besteldItemRepository = besteldItemRepository;
-    }
 
     @PostMapping(value = "/")
     public RedirectView postIndex() {
