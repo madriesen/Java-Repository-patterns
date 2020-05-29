@@ -4,6 +4,7 @@ import fact.it.restaurantapp.model.Keukenpersoneel;
 import fact.it.restaurantapp.model.Personeel;
 import fact.it.restaurantapp.model.Zaalpersoneel;
 import fact.it.restaurantapp.repositories.PersoneelRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +17,9 @@ import java.util.List;
 
 @Controller
 public class PersoneelController {
+    @Autowired
     private PersoneelRepository personeelRepository;
 
-    public PersoneelController(PersoneelRepository personeelRepository) {
-        this.personeelRepository = personeelRepository;
-    }
 
     @GetMapping("/personeel")
     public String retrieve(Model model) {
